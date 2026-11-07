@@ -75,14 +75,24 @@ if uploaded_file:
     if st.button("Find Matching Items"):
         with st.spinner("Finding similar items..."):
             lost_feature = extract_object_features(lost_image)
-            scores = cosine_similarity(
-                lost_feature.reshape(1, -1), features
-            )[0]
-            ranked = np.argsort(scores)[::-1]
+            match_count = min(len(found_images), len(features))
 
-        st.subheader("Matching Results")
+if match_count == 0:
+    st.error("No found items available.")
+else:
+    scores = cosine_similarity(
+        lost_feature.reshape(1, -1),
+        features[:match_count]
+    )[0]
 
-        for index in ranked[:3]:
-            st.image(found_images[index], width=250)
-            st.write("Similarity Score:", f"{scores[index] * 100:.2f}%")
-            st.divider()
+    ranked = np.argsort(scores)[::-1][:3]
+
+    st.subheader("Matching Results")
+
+    for index in ranked:
+        st.image(found_images[index], width=250)
+        st.write(
+            "Similarity Score:",
+            f"{scores[index] * 100:.2f}%"
+        )
+        st.divider()
