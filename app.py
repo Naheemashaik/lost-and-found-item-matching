@@ -11,7 +11,7 @@ import os
 
 st.set_page_config(page_title="Lost and Found Matching", page_icon="🔍", layout="wide")
 
-BASE = "/content"
+BASE = os.path.dirname(os.path.abspath(__file__))
 
 @st.cache_resource
 def load_models():
